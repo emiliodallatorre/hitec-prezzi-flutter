@@ -130,9 +130,9 @@ class _HomeScreenState extends State<HomeScreen> {
       // Questo è l'ultimo giro.
       if (index == neededPages - 1)
         pages.add(
-            pw.Page(build: (pw.Context context) => pw.GridView(childAspectRatio: 2, crossAxisCount: 4, children: labels.getRange(44 * index, labels.length))));
+            pw.Page(build: (pw.Context context) => pw.GridView(childAspectRatio: 2, crossAxisCount: 4, children: labels.getRange(44 * index, labels.length).toList())));
       pages.add(
-          pw.Page(build: (pw.Context context) => pw.GridView(childAspectRatio: 2, crossAxisCount: 4, children: labels.getRange(44 * index, 44 * (index + 1)))));
+          pw.Page(build: (pw.Context context) => pw.GridView(childAspectRatio: 2, crossAxisCount: 4, children: labels.getRange(44 * index, 44 * (index + 1)).toList())));
     }
 
 
