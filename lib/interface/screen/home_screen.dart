@@ -30,14 +30,20 @@ class _HomeScreenState extends State<HomeScreen> {
   List<pw.Page> pages;
   List<pw.Widget> labels;
 
+  GlobalKey<FormState> formKey;
+  TextEditingController priceController;
+  TextEditingController quantityController;
+
   @override
   void initState() {
     debugPrint("Inizializzo tutto.");
 
-    textController = TextEditingController();
-
     labels = List<pw.Widget>();
     pages = List<pw.Page>();
+
+    formKey = GlobalKey<FormState>();
+    priceController = TextEditingController();
+    quantityController = TextEditingController();
 
     super.initState();
   }
@@ -53,7 +59,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildBody(BuildContext context) {
-
     return Row(
       children: [
         Padding(
@@ -79,32 +84,42 @@ class _HomeScreenState extends State<HomeScreen> {
             padding: const EdgeInsets.only(left: 8.0, right: 16.0),
             child: ListView(
               children: [
-                Row(
-                  children: [
-                    Expanded(
-                        child: TextField(
-                      controller: textController,
-                    )),
-                    VerticalDivider(color: Colors.transparent),
-                    RaisedButton(
-                      child: Text("Aggiungi"),
-                      onPressed: () async {
-                        if (arial == null) {
-                          debugPrint("Inizializzo il font.");
+                Form(
+                  key: formKey,
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        validator: doubleValidator,
+                        controller: priceController,
+                        decoration: InputDecoration(labelText: "Prezzo", prefixText: "€"),
+                      ),
+                      TextFormField(
+                        validator: intValidator,
+                        controller: quantityController,
+                        decoration: InputDecoration(labelText: "Quantità"),
+                      ),
+                    ],
+                  ),
+                ),
+                RaisedButton(
+                  child: Text("Aggiungi"),
+                  onPressed: () async {
+                    if(formKey.currentState.validate()) {
+                      if (arial == null) {
+                        debugPrint("Inizializzo il font.");
 
-                          arial = pw.Font.ttf(await rootBundle.load("assets/Arial-Regular.ttf"));
-                        }
+                        arial = pw.Font.ttf(await rootBundle.load("assets/Arial-Regular.ttf"));
+                      }
 
-                        String text = textController.text;
-                        debugPrint("Aggiunto un elemento: $text.");
-                        
-                        labels.add(pw.Text(text));
+                      String text = priceController.text;
+                      for(int index = 0; index < int.parse(quantityController.text); index ++ )labels.add(pw.Text(text));
 
-                        textController.clear();
-                        setState(() {});
-                      },
-                    ),
-                  ],
+                      priceController.clear();
+                      quantityController.clear();
+
+                      setState(() {});
+                    }
+                  },
                 ),
               ],
             ),
@@ -116,7 +131,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   pw.Document renderDocument() {
     // Restituisce un placeholder vuoto.
-    if(labels.isEmpty)  {
+    if (labels.isEmpty) {
       pw.Document pdfDocument = pw.Document();
       pdfDocument.addPage(pw.Page());
 
@@ -132,14 +147,14 @@ class _HomeScreenState extends State<HomeScreen> {
       // Questo è l'ultimo giro.
       if (index == neededPages - 1) {
         debugPrint("Siamo all\'ultimo foglio.");
-        pages.add(
-            pw.Page(build: (pw.Context context) => pw.GridView(childAspectRatio: 2, crossAxisCount: 4, children: labels.getRange(44 * index, labels.length).toList())));
-            continue;
+        pages.add(pw.Page(
+            build: (pw.Context context) => pw.GridView(childAspectRatio: 2, crossAxisCount: 4, children: labels.getRange(44 * index, labels.length).toList())));
+        continue;
       }
-      pages.add(
-          pw.Page(build: (pw.Context context) => pw.GridView(childAspectRatio: 2, crossAxisCount: 4, children: labels.getRange(44 * index, 44 * (index + 1)).toList())));
+      pages.add(pw.Page(
+          build: (pw.Context context) =>
+              pw.GridView(childAspectRatio: 2, crossAxisCount: 4, children: labels.getRange(44 * index, 44 * (index + 1)).toList())));
     }
-
 
     pw.Document pdfDocument = pw.Document();
     pages.forEach((pw.Page page) => pdfDocument.addPage(page));
@@ -157,5 +172,23 @@ class _HomeScreenState extends State<HomeScreen> {
 
     debugPrint("Restituisco il PDF renderizzato.");
     return rawPdfFile;
+  }
+
+  static String doubleValidator(String text) {
+    try {
+      double.parse(text);
+      return null;
+    } catch (e) {
+      return "Inserisci un numero valido, separa i decimali con \".\"!";
+    }
+  }
+
+  static String intValidator(String text) {
+    try {
+      int.parse(text);
+      return null;
+    } catch (e) {
+      return "Inserisci un numero valido!";
+    }
   }
 }
