@@ -162,9 +162,14 @@ class _HomeScreenState extends State<HomeScreen> {
             pw.Expanded(flex: 4, child: pw.Image(logo)),
             pw.Expanded(
               flex: 10,
-              child: pw.Column(
+              child: pw.Row(
+                mainAxisSize: pw.MainAxisSize.max,
                 children: <pw.Widget>[
-                  pw.Text(label),
+                  pw.Text("€"),
+                  pw.Column(children: <pw.Widget>[
+                    pw.Text(double.parse(label).toStringAsFixed(2)),
+                    pw.Divider(),
+                  ]),
                 ],
               ),
             ),
