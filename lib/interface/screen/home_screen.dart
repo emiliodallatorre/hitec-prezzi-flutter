@@ -93,7 +93,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                         debugPrint("Aggiunto un elemento: ${textController.text}.");
 
-                        pdfDocument = pw.Document();
+                        // pdfDocument = pw.Document();
                         pdfDocument
                             .addPage(pw.Page(build: (pw.Context context) => pw.Center(child: pw.Text(textController.text, style: pw.TextStyle(font: arial)))));
 
