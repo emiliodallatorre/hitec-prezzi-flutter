@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 
@@ -22,13 +23,13 @@ class _HomeScreenState extends State<HomeScreen> {
   bytes: File('test.webp').readAsBytesSync(),
 );*/
 
-  pw.Font arial;
+  static pw.Font arial;
 
   int currentPage;
   int currentLabel;
 
   List<pw.Page> pages;
-  List<pw.Widget> labels;
+  List<String> labels;
 
   GlobalKey<FormState> formKey;
   TextEditingController priceController;
@@ -38,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     debugPrint("Inizializzo tutto.");
 
-    labels = List<pw.Widget>();
+    labels = List<String>();
     pages = List<pw.Page>();
 
     formKey = GlobalKey<FormState>();
@@ -110,8 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         arial = pw.Font.ttf(await rootBundle.load("assets/Arial-Regular.ttf"));
                       }
 
-                      String text = priceController.text;
-                      for (int index = 0; index < int.parse(quantityController.text); index++) labels.add(pw.Text(text, style: pw.TextStyle(font: arial)));
+                      for (int index = 0; index < int.parse(quantityController.text); index++) labels.add(priceController.text);
 
                       priceController.clear();
                       quantityController.clear();
@@ -141,21 +141,38 @@ class _HomeScreenState extends State<HomeScreen> {
     debugPrint("Serviranno $neededPages pagine.");
     List<pw.Page> pages = List<pw.Page>();
 
+    pw.Document pdfDocument = pw.Document();
+    List<pw.Widget> renderedLabels = List<pw.Widget>();
+    PdfImage logo = PdfImage.file(
+      pdfDocument.document,
+      bytes: File("assets/logo.jpg").readAsBytesSync(),
+    );
+    labels.forEach(
+      (String label) => renderedLabels.add(
+        pw.Row(
+          crossAxisAlignment: pw.CrossAxisAlignment.stretch,
+          children: <pw.Widget>[
+            pw.Image(logo),
+            pw.Text(label),
+          ],
+        ),
+      ),
+    );
+
     for (int index = 0; index < neededPages; index++) {
       debugPrint(index.toString());
       // Questo è l'ultimo giro.
       if (index == neededPages - 1) {
         debugPrint("Siamo all\'ultimo foglio.");
         pages.add(pw.Page(
-            build: (pw.Context context) => pw.GridView(childAspectRatio: 2, crossAxisCount: 4, children: labels.getRange(44 * index, labels.length).toList())));
+            build: (pw.Context context) =>
+                pw.GridView(childAspectRatio: 2, crossAxisCount: 4, children: renderedLabels.getRange(44 * index, labels.length).toList())));
         continue;
       }
       pages.add(pw.Page(
           build: (pw.Context context) =>
-              pw.GridView(childAspectRatio: 2, crossAxisCount: 4, children: labels.getRange(44 * index, 44 * (index + 1)).toList())));
+              pw.GridView(childAspectRatio: 2, crossAxisCount: 4, children: renderedLabels.getRange(44 * index, 44 * (index + 1)).toList())));
     }
-
-    pw.Document pdfDocument = pw.Document();
     pages.forEach((pw.Page page) => pdfDocument.addPage(page));
 
     return pdfDocument;
