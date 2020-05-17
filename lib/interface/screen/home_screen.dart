@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 
@@ -16,18 +15,18 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   TextEditingController textController;
-  pdfwidgets.Document pdf;
-  File pdfFile;
+
+  pdfwidgets.Document pdfDocument;
+  pdfwidgets.Page currentPage;
+  pdfwidgets.GridView pdfContent;
 
   @override
   void initState() {
     textController = TextEditingController();
-    pdf = pdfwidgets.Document();
+    pdfDocument = pdfwidgets.Document();
 
-    pdf.addPage(pdfwidgets.Page(
-                            pageFormat: PdfPageFormat.a4,
-                            build: (pdfwidgets.Context context) => pdfwidgets.Container()
-                          ));
+    pdfDocument.addPage(pdfwidgets.Page(pageFormat: PdfPageFormat.a4, build: (pdfwidgets.Context context) => pdfwidgets.Container()));
+    pdfContent = pdfwidgets.GridView(crossAxisCount: 4);
 
     super.initState();
   }
@@ -94,12 +93,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         debugPrint("Aggiunto un elemento: ${textController.text}.");
                         textController.clear();
 
-                        pdf.addPage(pdfwidgets.Page(
+                        pdfDocument.document.pdfPageList.pages.removeLast();
+
+                        pdfDocument.addPage(pdfwidgets.Page(
                             pageFormat: PdfPageFormat.a4,
                             build: (pdfwidgets.Context context) {
-                              return pdfwidgets.Center(
-                                child: pdfwidgets.Text("Hello World"),
-                              ); // Center
+                              pdfContent.children.add(pdfwidgets.Text(textController.text));
+                              return pdfContent; // Center
                             }));
 
                         setState(() {});
@@ -116,9 +116,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<Uint8List> getPdfFile() async {
-    Uint8List pdfDocument = pdf.save();
+    Uint8List rawPdfFile = pdfDocument.save();
 
     debugPrint("Restituisco il PDF renderizzato.");
-    return pdfDocument;
+    return rawPdfFile;
   }
 }
