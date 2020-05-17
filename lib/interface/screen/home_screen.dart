@@ -18,16 +18,19 @@ class _HomeScreenState extends State<HomeScreen> {
   TextEditingController textController;
 
   pw.Document pdfDocument;
-  List<pw.Widget> currentPageLabels;
 
   /*final image = PdfImage.file(
   pdf.document,
   bytes: File('test.webp').readAsBytesSync(),
 );*/
 
-  static pw.Font arial;
-  
+  pw.Font arial;
+
+  int currentPage;
+  int currentLabel;
+
   List<pw.Page> pages;
+  List<pw.Widget> currentPageLabels;
 
   @override
   void initState() {
@@ -100,7 +103,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         String text = textController.text;
                         debugPrint("Aggiunto un elemento: $text.");
 
-                        pages.add(pw.Page(build: (pw.Context context) => pw.Center(child: pw.Text(text))));
+                        pages.removeLast();
+                        currentPageLabels.add(pw.Text(text));
+                        pages.add(pw.Page(build: (pw.Context context)=> pw.GridView(childAspectRatio: 2, crossAxisCount: 4, children: currentPageLabels)));
 
                         textController.clear();
                         setState(() {});
