@@ -69,17 +69,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: AspectRatio(
                   aspectRatio: 1 / sqrt2,
                   child: FutureBuilder<pw.Document>(
-                      future: renderDocument(),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData)
-                          return PdfPreview(
-                            initialPageFormat: PdfPageFormat.a4,
-                            canChangePageFormat: false,
-                            build: (PdfPageFormat format) => snapshot.data.save(),
-                          );
+                    future: renderDocument(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData)
+                        return PdfPreview(
+                          initialPageFormat: PdfPageFormat.a4,
+                          canChangePageFormat: false,
+                          build: (PdfPageFormat format) => snapshot.data.save(),
+                        );
 
-                        return Center(child: CircularProgressIndicator());
-                      }),
+                      return Center(child: CircularProgressIndicator());
+                    },
+                  ),
                 ),
               ),
               Text("Preview del documento", style: Theme.of(context).textTheme.caption),
@@ -151,7 +152,7 @@ class _HomeScreenState extends State<HomeScreen> {
     List<pw.Widget> renderedLabels = List<pw.Widget>();
     PdfImage logo = PdfImage.file(
       pdfDocument.document,
-      bytes: (await rootBundle.load("assets/Arial-Regular.ttf")).buffer.asUint8List(),
+      bytes: (await rootBundle.load("assets/logo.jpg")).buffer.asUint8List(),
     );
     labels.forEach(
       (String label) => renderedLabels.add(
@@ -181,6 +182,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
     pages.forEach((pw.Page page) => pdfDocument.addPage(page));
 
+    debugPrint("Ecco il pdf renderizzato.");
     return pdfDocument;
   }
 
