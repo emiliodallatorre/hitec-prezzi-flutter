@@ -180,7 +180,7 @@ class _HomeScreenState extends State<HomeScreen> {
         debugPrint("Siamo all\'ultimo foglio.");
 
         List<pw.Widget> widgets = renderedLabels.getRange(44 * index, labels.length).toList();
-        for (int i = labels.length; i < (44 * index + 1); i++) widgets.add(pw.Container());
+        for (int i = labels.length; i < (44 * (index + 1)); i++) widgets.add(pw.Container());
 
         pages.add(pw.Page(build: (pw.Context context) => pw.GridView(childAspectRatio: 2, crossAxisCount: 4, children: widgets)));
         continue;
