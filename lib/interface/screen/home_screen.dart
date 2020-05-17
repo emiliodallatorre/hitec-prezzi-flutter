@@ -68,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: PdfPreview(
                     initialPageFormat: PdfPageFormat.a4,
                     canChangePageFormat: false,
-                    build: (PdfPageFormat format) => pdfDocument.save(),
+                    build: (PdfPageFormat format) => pdfDocumentToUint8List(pdfDocument),
                   ),
                 ),
               ),
