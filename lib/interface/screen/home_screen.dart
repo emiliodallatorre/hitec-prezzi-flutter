@@ -50,6 +50,10 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildBody(BuildContext context) {
+    pdfDocument.addPage(pw.Page(build: (pw.Context context) => pw.Center(child: pw.Text("Ciao!", style: pw.TextStyle(font: arial)))));
+    pdfDocument.addPage(pw.Page(build: (pw.Context context) => pw.Center(child: pw.Text("Come!", style: pw.TextStyle(font: arial)))));
+    pdfDocument.addPage(pw.Page(build: (pw.Context context) => pw.Center(child: pw.Text("Va!", style: pw.TextStyle(font: arial)))));
+
     return Row(
       children: [
         Padding(
