@@ -157,14 +157,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 crossAxisAlignment: pw.CrossAxisAlignment.center,
                 children: <pw.Widget>[
                   pw.VerticalDivider(color: PdfColors.white),
-                  pw.Row(
+                  pw.Center(child: pw.Row(
                     mainAxisSize: pw.MainAxisSize.max,
                     mainAxisAlignment: pw.MainAxisAlignment.center,
                     children: <pw.Widget>[
                       pw.Text("€", style: pw.TextStyle(font: arial, fontSize: 16.0)),
                       pw.Text(double.parse(label).toStringAsFixed(2).replaceAll(".", ","), style: pw.TextStyle(font: arial, fontSize: 16.0, decoration: pw.TextDecoration.underline)),
                     ],
-                  ),
+                  ),),
                 ],
               ),
             ),
