@@ -124,13 +124,18 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     int neededPages = (labels.length / 44).ceil();
+    debugPrint("Serviranno $neededPages pagine.");
     List<pw.Page> pages = List<pw.Page>();
 
     for (int index = 0; index < neededPages; index++) {
+      debugPrint(index.toString());
       // Questo è l'ultimo giro.
-      if (index == neededPages - 1)
+      if (index == neededPages - 1) {
+        debugPrint("Siamo all\'ultimo foglio.");
         pages.add(
             pw.Page(build: (pw.Context context) => pw.GridView(childAspectRatio: 2, crossAxisCount: 4, children: labels.getRange(44 * index, labels.length).toList())));
+            continue;
+      }
       pages.add(
           pw.Page(build: (pw.Context context) => pw.GridView(childAspectRatio: 2, crossAxisCount: 4, children: labels.getRange(44 * index, 44 * (index + 1)).toList())));
     }
