@@ -146,30 +146,33 @@ class _HomeScreenState extends State<HomeScreen> {
 
     labels.forEach(
       (String label) => renderedLabels.add(
-        pw.Row(
-          crossAxisAlignment: pw.CrossAxisAlignment.stretch,
-          children: <pw.Widget>[
-            pw.Expanded(flex: 4, child: pw.Image(logo)),
-            pw.Expanded(
-              flex: 10,
-              child: pw.Row(
-                mainAxisSize: pw.MainAxisSize.max,
-                crossAxisAlignment: pw.CrossAxisAlignment.center,
-                children: <pw.Widget>[
-                  pw.VerticalDivider(color: PdfColors.white),
-                  pw.Center(child: pw.Row(
+        pw.Container(
+            child: pw.Row(
+              crossAxisAlignment: pw.CrossAxisAlignment.stretch,
+              children: <pw.Widget>[
+                pw.Expanded(flex: 4, child: pw.Image(logo)),
+                pw.Expanded(
+                  flex: 10,
+                  child: pw.Row(
                     mainAxisSize: pw.MainAxisSize.max,
-                    mainAxisAlignment: pw.MainAxisAlignment.center,
+                    crossAxisAlignment: pw.CrossAxisAlignment.center,
                     children: <pw.Widget>[
-                      pw.Text("€", style: pw.TextStyle(font: arial, fontSize: 16.0)),
-                      pw.Text(double.parse(label).toStringAsFixed(2).replaceAll(".", ","), style: pw.TextStyle(font: arial, fontSize: 16.0, decoration: pw.TextDecoration.underline)),
+                      pw.VerticalDivider(color: PdfColors.white),
+                      pw.Row(
+                        mainAxisSize: pw.MainAxisSize.max,
+                        mainAxisAlignment: pw.MainAxisAlignment.center,
+                        children: <pw.Widget>[
+                          pw.Text("€", style: pw.TextStyle(font: arial, fontSize: 16.0)),
+                          pw.Text(double.parse(label).toStringAsFixed(2).replaceAll(".", ","),
+                              style: pw.TextStyle(font: arial, fontSize: 16.0, decoration: pw.TextDecoration.underline)),
+                        ],
+                      ),
                     ],
-                  ),),
-                ],
-              ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+            color: PdfColors.red),
       ),
     );
 
