@@ -104,15 +104,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 RaisedButton(
                   child: Text("Aggiungi"),
                   onPressed: () async {
-                    if(formKey.currentState.validate()) {
+                    if (formKey.currentState.validate()) {
                       if (arial == null) {
                         debugPrint("Inizializzo il font.");
-
                         arial = pw.Font.ttf(await rootBundle.load("assets/Arial-Regular.ttf"));
                       }
 
                       String text = priceController.text;
-                      for(int index = 0; index < int.parse(quantityController.text); index ++ )labels.add(pw.Text(text));
+                      for (int index = 0; index < int.parse(quantityController.text); index++) labels.add(pw.Text(text, style: pw.TextStyle(font: arial)));
 
                       priceController.clear();
                       quantityController.clear();
