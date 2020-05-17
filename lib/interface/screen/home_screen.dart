@@ -3,7 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:pdf/pdf.dart';
-import 'package:pdf/widgets.dart' as pdfwidgets;
+import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -16,20 +16,18 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   TextEditingController textController;
 
-  pdfwidgets.Document pdfDocument;
-  pdfwidgets.Page currentPage;
-  List<pdfwidgets.Widget> currentPageLabels;
+  pw.Document pdfDocument;
+  pw.Page currentPage;
+  List<pw.Widget> currentPageLabels;
 
   @override
   void initState() {
     debugPrint("Inizializzo tutto.");
 
     textController = TextEditingController();
-    pdfDocument = pdfwidgets.Document();
+    pdfDocument = pw.Document();
 
-    // Inizializza la prima pagina.
-    pdfDocument.addPage(pdfwidgets.Page(pageFormat: PdfPageFormat.a4, build: (pdfwidgets.Context context) => pdfwidgets.Container()));
-    currentPageLabels = List<pdfwidgets.Widget>();
+    currentPageLabels = List<pw.Widget>();
 
     super.initState();
   }
@@ -54,20 +52,14 @@ class _HomeScreenState extends State<HomeScreen> {
               Expanded(
                 child: AspectRatio(
                   aspectRatio: 1 / sqrt2,
-                  /*child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(color: Colors.black),
-                    ),
-                  ),*/
                   child: PdfPreview(
-                            initialPageFormat: PdfPageFormat.a4,
-                            canChangePageFormat: false,
-                            build: (PdfPageFormat format) => getPdfFile(pdfDocument),
-                          ),
+                    initialPageFormat: PdfPageFormat.a4,
+                    canChangePageFormat: false,
+                    build: (PdfPageFormat format) => pdfDocumentToUint8List(pdfDocument),
+                  ),
                 ),
               ),
-              Text("Preview", style: Theme.of(context).textTheme.caption),
+              Text("Preview del documento", style: Theme.of(context).textTheme.caption),
             ],
           ),
         ),
@@ -90,22 +82,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
                         // pdfDocument.document.pdfPageList.pages.removeLast();
 
-                        pdfDocument.addPage(pdfwidgets.Page(
-                            pageFormat: PdfPageFormat.a4,
-                            build: (pdfwidgets.Context context) {
-                            return pdfwidgets.GridView(crossAxisCount: 4, children: <pdfwidgets.Widget>[pdfwidgets.Text("Ciao"), pdfwidgets.Text("Cia"),]);
-                            }));
-
-                               pdfDocument.addPage(pdfwidgets.Page(
-      pageFormat: PdfPageFormat.a4,
-      build: (pdfwidgets.Context context) {
-        return pdfwidgets.Center(
-          child: pdfwidgets.Text("Hello World"),
-        );
-      })); 
+                        currentPageLabels.add(pw.Text(textController.text));
+                        pdfDocument.addPage(
+                            pw.Page(pageFormat: PdfPageFormat.a4, build: (pw.Context context) => pw.GridView(crossAxisCount: 4, children: currentPageLabels)));
 
                         debugPrint("Il documento ha " + pdfDocument.document.pdfPageList.pages.length.toString() + " pagine.");
-
 
                         textController.clear();
                         setState(() {});
@@ -121,17 +102,15 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Future<Uint8List> getPdfFile(pdfwidgets.Document pdfDocument) async {
-    if(pdfDocument.document.pdfPageList.pages.isEmpty) {
+  Future<Uint8List> pdfDocumentToUint8List(pw.Document pdfDocumentToBeTranslated) async {
+    if (pdfDocumentToBeTranslated.document.pdfPageList.pages.isEmpty) {
       debugPrint("Essendo che il documento è vuoto, lo riempio con una pagina di placeholder.");
-      pdfDocument.addPage(pdfwidgets.Page(build: (pdfwidgets.Context context) =>pdfwidgets.Center(child: pdfwidgets.Text("Ciao!"))));
+      pdfDocumentToBeTranslated.addPage(pw.Page(build: (pw.Context context) => pw.Center(child: pw.Text("Ciao!"))));
     }
 
-    Uint8List rawPdfFile = pdfDocument.save();
+    Uint8List rawPdfFile = pdfDocumentToBeTranslated.save();
 
     debugPrint("Restituisco il PDF renderizzato.");
-    debugPrint(rawPdfFile.lengthInBytes.toString());
-
     return rawPdfFile;
   }
 }
