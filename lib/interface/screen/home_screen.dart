@@ -97,10 +97,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           arial = pw.Font.ttf(await rootBundle.load("assets/Arial-Regular.ttf"));
                         }
 
-                        debugPrint("Aggiunto un elemento: ${textController.text}.");
+                        String text = textController.text;
+                        debugPrint("Aggiunto un elemento: $text.");
 
-                        pages.add(pw.Page(build: (pw.Context context) => pw.Center(child: pw.Text(textController.text, style: pw.TextStyle(font: arial)))));
-                        pages.add(pw.Page(build: (pw.Context context) => pw.Center(child: pw.Text("aaaaa!", style: pw.TextStyle(font: arial)))));
+                        pages.add(pw.Page(build: (pw.Context context) => pw.Center(child: pw.Text(text))));
 
                         textController.clear();
                         setState(() {});
