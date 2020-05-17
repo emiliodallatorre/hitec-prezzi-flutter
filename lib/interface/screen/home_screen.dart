@@ -56,7 +56,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: FutureBuilder<Uint8List>(
                       future: getPdfFile(),
                       builder: (BuildContext context, AsyncSnapshot<Uint8List> pdfSnapshot) {
-                        if (pdfSnapshot.hasData) return PdfPreview(build: (PdfPageFormat format) => pdfSnapshot.data);
+                        if (pdfSnapshot.hasData)
+                          return PdfPreview(
+                            initialPageFormat: PdfPageFormat.a4,
+                            canChangePageFormat: false,
+                            build: (PdfPageFormat format) => pdfSnapshot.data,
+                          );
 
                         return Center(child: CircularProgressIndicator());
                       }),
