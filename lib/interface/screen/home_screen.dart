@@ -159,8 +159,15 @@ class _HomeScreenState extends State<HomeScreen> {
         pw.Row(
           crossAxisAlignment: pw.CrossAxisAlignment.stretch,
           children: <pw.Widget>[
-            pw.Image(logo),
-            pw.Text(label),
+            pw.Expanded(flex: 4, child: pw.Image(logo)),
+            pw.Expanded(
+              flex: 10,
+              child: pw.Column(
+                children: <pw.Widget>[
+                  pw.Text(label),
+                ],
+              ),
+            ),
           ],
         ),
       ),
