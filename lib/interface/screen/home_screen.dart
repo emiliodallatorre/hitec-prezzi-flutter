@@ -103,6 +103,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
                         debugPrint("Il documento ha " + pdfDocument.document.pdfPageList.pages.length.toString() + " pagine.");
 
+                        pdfDocument.addPage(pw.Page(build: (pw.Context context) => pw.Center(child: pw.Text(textController.text, style: pw.TextStyle(font: arial)))));
+                        pdfDocument.addPage(pw.Page(build: (pw.Context context) => pw.Center(child: pw.Text("aaaaa!", style: pw.TextStyle(font: arial)))));
+
                         textController.clear();
                         setState(() {});
                       },
