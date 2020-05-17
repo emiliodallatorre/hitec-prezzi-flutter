@@ -17,8 +17,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   TextEditingController textController;
 
-  pw.Document pdfDocument;
-
   /*final image = PdfImage.file(
   pdf.document,
   bytes: File('test.webp').readAsBytesSync(),
@@ -30,16 +28,15 @@ class _HomeScreenState extends State<HomeScreen> {
   int currentLabel;
 
   List<pw.Page> pages;
-  List<pw.Widget> currentPageLabels;
+  List<pw.Widget> labels;
 
   @override
   void initState() {
     debugPrint("Inizializzo tutto.");
 
     textController = TextEditingController();
-    pdfDocument = pw.Document();
 
-    currentPageLabels = List<pw.Widget>();
+    labels = List<pw.Widget>();
     pages = List<pw.Page>();
 
     super.initState();
@@ -56,8 +53,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildBody(BuildContext context) {
-    pdfDocument = pw.Document();
-    pages.forEach((pw.Page page) =>pdfDocument.addPage(page));
 
     return Row(
       children: [
@@ -71,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: PdfPreview(
                     initialPageFormat: PdfPageFormat.a4,
                     canChangePageFormat: false,
-                    build: (PdfPageFormat format) => pdfDocumentToUint8List(pdfDocument),
+                    build: (PdfPageFormat format) => renderDocument(),
                   ),
                 ),
               ),
@@ -103,9 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         String text = textController.text;
                         debugPrint("Aggiunto un elemento: $text.");
 
-                        pages.removeLast();
-                        currentPageLabels.add(pw.Text(text));
-                        pages.add(pw.Page(build: (pw.Context context)=> pw.GridView(childAspectRatio: 2, crossAxisCount: 4, children: currentPageLabels)));
+                        labels.add(pw.Text(text));
 
                         textController.clear();
                         setState(() {});
@@ -119,6 +112,26 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ],
     );
+  }
+
+  pw.Document renderDocument() {
+    int neededPages = (labels.length / 44).ceil();
+    List<pw.Page> pages = List<pw.Page>();
+
+    for (int index = 0; index < neededPages; index++) {
+      // Questo è l'ultimo giro.
+      if (index == neededPages - 1)
+        pages.add(
+            pw.Page(build: (pw.Context context) => pw.GridView(childAspectRatio: 2, crossAxisCount: 4, children: labels.getRange(44 * index, labels.length))));
+      pages.add(
+          pw.Page(build: (pw.Context context) => pw.GridView(childAspectRatio: 2, crossAxisCount: 4, children: labels.getRange(44 * index, 44 * (index + 1)))));
+    }
+
+
+    pw.Document pdfDocument = pw.Document();
+    pages.forEach((pw.Page page) => pdfDocument.addPage(page));
+
+    return pdfDocument;
   }
 
   Future<Uint8List> pdfDocumentToUint8List(pw.Document pdfDocumentToBeTranslated) async {
