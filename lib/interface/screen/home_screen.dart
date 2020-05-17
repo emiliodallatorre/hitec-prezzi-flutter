@@ -1,8 +1,8 @@
 import 'dart:math';
 import 'dart:typed_data';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
@@ -25,8 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bytes: File('test.webp').readAsBytesSync(),
 );*/
 
-  static final Uint8List fontData = File("assets/Arial-Regular.ttf").readAsBytesSync();
-  static final pw.Font arial = pw.Font.ttf(fontData.buffer.asByteData());
+  static pw.Font arial;
 
   @override
   void initState() {
@@ -85,11 +84,18 @@ class _HomeScreenState extends State<HomeScreen> {
                     VerticalDivider(color: Colors.transparent),
                     RaisedButton(
                       child: Text("Aggiungi"),
-                      onPressed: () {
+                      onPressed: () async {
+                        if (arial == null) {
+                          debugPrint("Inizializzo il font.");
+
+                          arial = await rootBundle.load("assets/Arial-Regular.ttf") as pw.Font;
+                        }
+
                         debugPrint("Aggiunto un elemento: ${textController.text}.");
 
                         pdfDocument = pw.Document();
-                        pdfDocument.addPage(pw.Page(build: (pw.Context context) => pw.Center(child: pw.Text(textController.text, style: pw.TextStyle(font: arial)))));
+                        pdfDocument
+                            .addPage(pw.Page(build: (pw.Context context) => pw.Center(child: pw.Text(textController.text, style: pw.TextStyle(font: arial)))));
 
                         debugPrint("Il documento ha " + pdfDocument.document.pdfPageList.pages.length.toString() + " pagine.");
 
