@@ -17,13 +17,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   TextEditingController textController;
 
-  /*final image = PdfImage.file(
-  pdf.document,
-  bytes: File('test.webp').readAsBytesSync(),
-);*/
-
-  static pw.Font arial;
-
   int currentPage;
   int currentLabel;
 
@@ -113,11 +106,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Text("Aggiungi"),
                   onPressed: () async {
                     if (formKey.currentState.validate()) {
-                      if (arial == null) {
-                        debugPrint("Inizializzo il font.");
-                        arial = pw.Font.ttf(await rootBundle.load("assets/Arial-Regular.ttf"));
-                      }
-
                       for (int index = 0; index < int.parse(quantityController.text); index++) labels.add(priceController.text);
 
                       priceController.clear();
@@ -154,6 +142,8 @@ class _HomeScreenState extends State<HomeScreen> {
       pdfDocument.document,
       bytes: (await rootBundle.load("assets/logo.jpg")).buffer.asUint8List(),
     );
+    pw.Font arial = pw.Font.ttf(await rootBundle.load("assets/Arial-Regular.ttf"));
+
     labels.forEach(
       (String label) => renderedLabels.add(
         pw.Row(
@@ -171,7 +161,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     mainAxisAlignment: pw.MainAxisAlignment.center,
                     children: <pw.Widget>[
                       pw.Text(double.parse(label).toStringAsFixed(2), style: pw.TextStyle(font: arial, fontSize: 16.0)),
-                      pw.Divider(thickness: 1.0),
+                      pw.Divider(thickness: 1.0, color: PdfColors.black),
                     ],
                   ),
                 ],
@@ -207,7 +197,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<Uint8List> pdfDocumentToUint8List(pw.Document pdfDocumentToBeTranslated) async {
     if (pdfDocumentToBeTranslated.document.pdfPageList.pages.isEmpty) {
       debugPrint("Essendo che il documento è vuoto, lo riempio con una pagina di placeholder.");
-      pdfDocumentToBeTranslated.addPage(pw.Page(build: (pw.Context context) => pw.Center(child: pw.Text("Ciao!", style: pw.TextStyle(font: arial)))));
+      pdfDocumentToBeTranslated.addPage(pw.Page(build: (pw.Context context) => pw.Center(child: pw.Text("Ciao!"))));
     }
 
     Uint8List rawPdfFile = pdfDocumentToBeTranslated.save();
