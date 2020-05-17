@@ -103,7 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         String text = textController.text;
                         debugPrint("Aggiunto un elemento: $text.");
 
-                        pages.removeLast();
+                        if(pages.isNotEmpty) pages.removeLast();
                         currentPageLabels.add(pw.Text(text));
                         pages.add(pw.Page(build: (pw.Context context)=> pw.GridView(childAspectRatio: 2, crossAxisCount: 4, children: currentPageLabels)));
 
