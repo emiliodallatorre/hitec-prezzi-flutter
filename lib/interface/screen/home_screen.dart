@@ -26,6 +26,8 @@ class _HomeScreenState extends State<HomeScreen> {
 );*/
 
   static pw.Font arial;
+  
+  List<pw.Page> pages;
 
   @override
   void initState() {
@@ -35,6 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
     pdfDocument = pw.Document();
 
     currentPageLabels = List<pw.Widget>();
+    pages = List<pw.Page>();
 
     super.initState();
   }
@@ -50,9 +53,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildBody(BuildContext context) {
-    pdfDocument.addPage(pw.Page(build: (pw.Context context) => pw.Center(child: pw.Text("Ciao!", style: pw.TextStyle(font: arial)))));
-    pdfDocument.addPage(pw.Page(build: (pw.Context context) => pw.Center(child: pw.Text("Come!", style: pw.TextStyle(font: arial)))));
-    pdfDocument.addPage(pw.Page(build: (pw.Context context) => pw.Center(child: pw.Text("Va!", style: pw.TextStyle(font: arial)))));
+    pdfDocument = pw.Document();
+    pages.forEach((pw.Page page) =>pdfDocument.addPage(page));
 
     return Row(
       children: [
@@ -97,14 +99,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
                         debugPrint("Aggiunto un elemento: ${textController.text}.");
 
-                        // pdfDocument = pw.Document();
-                        pdfDocument
-                            .addPage(pw.Page(build: (pw.Context context) => pw.Center(child: pw.Text(textController.text, style: pw.TextStyle(font: arial)))));
-
-                        debugPrint("Il documento ha " + pdfDocument.document.pdfPageList.pages.length.toString() + " pagine.");
-
-                        pdfDocument.addPage(pw.Page(build: (pw.Context context) => pw.Center(child: pw.Text(textController.text, style: pw.TextStyle(font: arial)))));
-                        pdfDocument.addPage(pw.Page(build: (pw.Context context) => pw.Center(child: pw.Text("aaaaa!", style: pw.TextStyle(font: arial)))));
+                        pages.add(pw.Page(build: (pw.Context context) => pw.Center(child: pw.Text(textController.text, style: pw.TextStyle(font: arial)))));
+                        pages.add(pw.Page(build: (pw.Context context) => pw.Center(child: pw.Text("aaaaa!", style: pw.TextStyle(font: arial)))));
 
                         textController.clear();
                         setState(() {});
