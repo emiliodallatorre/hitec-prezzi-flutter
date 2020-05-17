@@ -154,7 +154,7 @@ class _HomeScreenState extends State<HomeScreen> {
               flex: 10,
               child: pw.Row(
                 mainAxisSize: pw.MainAxisSize.max,
-                crossAxisAlignment: pw.CrossAxisAlignment.stretch,
+                crossAxisAlignment: pw.CrossAxisAlignment.center,
                 children: <pw.Widget>[
                   pw.VerticalDivider(color: PdfColors.white),
                   pw.Row(
