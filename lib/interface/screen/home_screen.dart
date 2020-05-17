@@ -18,15 +18,16 @@ class _HomeScreenState extends State<HomeScreen> {
 
   pdfwidgets.Document pdfDocument;
   pdfwidgets.Page currentPage;
-  pdfwidgets.GridView pdfContent;
+  List<pdfwidgets.Widget> currentPageLabels;
 
   @override
   void initState() {
     textController = TextEditingController();
     pdfDocument = pdfwidgets.Document();
 
+    // Inizializza la prima pagina.
     pdfDocument.addPage(pdfwidgets.Page(pageFormat: PdfPageFormat.a4, build: (pdfwidgets.Context context) => pdfwidgets.Container()));
-    pdfContent = pdfwidgets.GridView(crossAxisCount: 4);
+    currentPageLabels = List<pdfwidgets.Widget>();
 
     super.initState();
   }
@@ -91,17 +92,19 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Text("Aggiungi"),
                       onPressed: () {
                         debugPrint("Aggiunto un elemento: ${textController.text}.");
-                        textController.clear();
 
                         pdfDocument.document.pdfPageList.pages.removeLast();
 
                         pdfDocument.addPage(pdfwidgets.Page(
                             pageFormat: PdfPageFormat.a4,
                             build: (pdfwidgets.Context context) {
-                              pdfContent.children.add(pdfwidgets.Text(textController.text));
-                              return pdfContent; // Center
+                            return pdfwidgets.GridView(crossAxisCount: 4, children: <pdfwidgets.Widget>[pdfwidgets.Text("Ciao"), pdfwidgets.Text("Cia"),]);
                             }));
 
+                        debugPrint(pdfDocument.document.pdfPageList.pages.length.toString());
+
+
+                        textController.clear();
                         setState(() {});
                       },
                     ),
@@ -116,9 +119,14 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<Uint8List> getPdfFile() async {
+    pdfDocument = pdfwidgets.Document();
+    if(pdfDocument.document.pdfPageList.pages.isEmpty) pdfDocument.addPage(pdfwidgets.Page(build: (pdfwidgets.Context context) =>pdfwidgets.Center(child: pdfwidgets.Text("Ciao!"))));
+
     Uint8List rawPdfFile = pdfDocument.save();
 
     debugPrint("Restituisco il PDF renderizzato.");
+    debugPrint(rawPdfFile.lengthInBytes.toString());
+
     return rawPdfFile;
   }
 }
