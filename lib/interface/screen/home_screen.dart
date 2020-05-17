@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 
@@ -69,11 +68,18 @@ class _HomeScreenState extends State<HomeScreen> {
               Expanded(
                 child: AspectRatio(
                   aspectRatio: 1 / sqrt2,
-                  child: PdfPreview(
-                    initialPageFormat: PdfPageFormat.a4,
-                    canChangePageFormat: false,
-                    build: (PdfPageFormat format) => renderDocument().save(),
-                  ),
+                  child: FutureBuilder<pw.Document>(
+                      future: renderDocument(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData)
+                          return PdfPreview(
+                            initialPageFormat: PdfPageFormat.a4,
+                            canChangePageFormat: false,
+                            build: (PdfPageFormat format) => snapshot.data.save(),
+                          );
+
+                        return Center(child: CircularProgressIndicator());
+                      }),
                 ),
               ),
               Text("Preview del documento", style: Theme.of(context).textTheme.caption),
