@@ -156,14 +156,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 mainAxisSize: pw.MainAxisSize.max,
                 crossAxisAlignment: pw.CrossAxisAlignment.stretch,
                 children: <pw.Widget>[
-                  pw.Text("€", style: pw.TextStyle(font: arial, fontSize: 16.0)),
                   pw.VerticalDivider(color: PdfColors.white),
-                  pw.Column(
+                  pw.Row(
                     mainAxisSize: pw.MainAxisSize.max,
                     mainAxisAlignment: pw.MainAxisAlignment.center,
                     children: <pw.Widget>[
+                      pw.Text("€", style: pw.TextStyle(font: arial, fontSize: 16.0)),
                       pw.Text(double.parse(label).toStringAsFixed(2).replaceAll(".", ","), style: pw.TextStyle(font: arial, fontSize: 16.0, decoration: pw.TextDecoration.underline)),
-                      pw.Divider(thickness: 1.0, color: PdfColors.black),
                     ],
                   ),
                 ],
