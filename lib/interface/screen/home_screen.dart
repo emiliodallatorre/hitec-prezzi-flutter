@@ -22,6 +22,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
+    debugPrint("Inizializzo tutto.");
+
     textController = TextEditingController();
     pdfDocument = pdfwidgets.Document();
 
@@ -58,18 +60,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       border: Border.all(color: Colors.black),
                     ),
                   ),*/
-                  child: FutureBuilder<Uint8List>(
-                      future: getPdfFile(),
-                      builder: (BuildContext context, AsyncSnapshot<Uint8List> pdfSnapshot) {
-                        if (pdfSnapshot.hasData)
-                          return PdfPreview(
+                  child: PdfPreview(
                             initialPageFormat: PdfPageFormat.a4,
                             canChangePageFormat: false,
-                            build: (PdfPageFormat format) => pdfSnapshot.data,
-                          );
-
-                        return Center(child: CircularProgressIndicator());
-                      }),
+                            build: (PdfPageFormat format) => getPdfFile(pdfDocument),
+                          ),
                 ),
               ),
               Text("Preview", style: Theme.of(context).textTheme.caption),
@@ -93,7 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       onPressed: () {
                         debugPrint("Aggiunto un elemento: ${textController.text}.");
 
-                        pdfDocument.document.pdfPageList.pages.removeLast();
+                        // pdfDocument.document.pdfPageList.pages.removeLast();
 
                         pdfDocument.addPage(pdfwidgets.Page(
                             pageFormat: PdfPageFormat.a4,
@@ -101,7 +96,15 @@ class _HomeScreenState extends State<HomeScreen> {
                             return pdfwidgets.GridView(crossAxisCount: 4, children: <pdfwidgets.Widget>[pdfwidgets.Text("Ciao"), pdfwidgets.Text("Cia"),]);
                             }));
 
-                        debugPrint(pdfDocument.document.pdfPageList.pages.length.toString());
+                               pdfDocument.addPage(pdfwidgets.Page(
+      pageFormat: PdfPageFormat.a4,
+      build: (pdfwidgets.Context context) {
+        return pdfwidgets.Center(
+          child: pdfwidgets.Text("Hello World"),
+        );
+      })); 
+
+                        debugPrint("Il documento ha " + pdfDocument.document.pdfPageList.pages.length.toString() + " pagine.");
 
 
                         textController.clear();
@@ -118,9 +121,11 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Future<Uint8List> getPdfFile() async {
-    pdfDocument = pdfwidgets.Document();
-    if(pdfDocument.document.pdfPageList.pages.isEmpty) pdfDocument.addPage(pdfwidgets.Page(build: (pdfwidgets.Context context) =>pdfwidgets.Center(child: pdfwidgets.Text("Ciao!"))));
+  Future<Uint8List> getPdfFile(pdfwidgets.Document pdfDocument) async {
+    if(pdfDocument.document.pdfPageList.pages.isEmpty) {
+      debugPrint("Essendo che il documento è vuoto, lo riempio con una pagina di placeholder.");
+      pdfDocument.addPage(pdfwidgets.Page(build: (pdfwidgets.Context context) =>pdfwidgets.Center(child: pdfwidgets.Text("Ciao!"))));
+    }
 
     Uint8List rawPdfFile = pdfDocument.save();
 
