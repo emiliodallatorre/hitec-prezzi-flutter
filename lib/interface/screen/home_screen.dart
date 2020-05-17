@@ -26,11 +26,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
     pdf.addPage(pdfwidgets.Page(
                             pageFormat: PdfPageFormat.a4,
-                            build: (pdfwidgets.Context context) {
-                              return pdfwidgets.Center(
-                                child: pdfwidgets.Text("Hello World"),
-                              ); // Center
-                            }));
+                            build: (pdfwidgets.Context context) => pdfwidgets.Container()
+                          ));
 
     super.initState();
   }
