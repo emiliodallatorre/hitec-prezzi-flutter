@@ -165,11 +165,15 @@ class _HomeScreenState extends State<HomeScreen> {
               child: pw.Row(
                 mainAxisSize: pw.MainAxisSize.max,
                 children: <pw.Widget>[
-                  pw.Text("€", style: pw.TextStyle(font: arial)),
-                  pw.Column(children: <pw.Widget>[
-                    pw.Text(double.parse(label).toStringAsFixed(2), style: pw.TextStyle(font: arial)),
-                    pw.Divider(),
-                  ]),
+                  pw.Text("€", style: pw.TextStyle(font: arial, fontSize: 16.0)),
+                  pw.Column(
+                    mainAxisSize: pw.MainAxisSize.max,
+                    mainAxisAlignment: pw.MainAxisAlignment.center,
+                    children: <pw.Widget>[
+                      pw.Text(double.parse(label).toStringAsFixed(2), style: pw.TextStyle(font: arial, fontSize: 16.0)),
+                      pw.Divider(thickness: 1.0),
+                    ],
+                  ),
                 ],
               ),
             ),
