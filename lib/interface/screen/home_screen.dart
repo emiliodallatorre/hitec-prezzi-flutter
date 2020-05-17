@@ -115,6 +115,14 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   pw.Document renderDocument() {
+    // Restituisce un placeholder vuoto.
+    if(labels.isEmpty)  {
+      pw.Document pdfDocument = pw.Document();
+      pdfDocument.addPage(pw.Page());
+
+      return pdfDocument;
+    }
+
     int neededPages = (labels.length / 44).ceil();
     List<pw.Page> pages = List<pw.Page>();
 
