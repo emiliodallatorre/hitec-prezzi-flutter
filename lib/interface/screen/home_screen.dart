@@ -128,7 +128,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  pw.Document renderDocument() {
+  Future<pw.Document> renderDocument() async {
     // Restituisce un placeholder vuoto.
     if (labels.isEmpty) {
       pw.Document pdfDocument = pw.Document();
@@ -145,7 +145,7 @@ class _HomeScreenState extends State<HomeScreen> {
     List<pw.Widget> renderedLabels = List<pw.Widget>();
     PdfImage logo = PdfImage.file(
       pdfDocument.document,
-      bytes: File("assets/logo.jpg").readAsBytesSync(),
+      bytes: (await rootBundle.load("assets/Arial-Regular.ttf")).buffer.asUint8List(),
     );
     labels.forEach(
       (String label) => renderedLabels.add(
