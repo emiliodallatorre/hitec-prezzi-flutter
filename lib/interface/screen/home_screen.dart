@@ -88,7 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         if (arial == null) {
                           debugPrint("Inizializzo il font.");
 
-                          arial = await rootBundle.load("assets/Arial-Regular.ttf") as pw.Font;
+                          arial = (await rootBundle.load("assets/Arial-Regular.ttf")).buffer.asByteData() as pw.Font;
                         }
 
                         debugPrint("Aggiunto un elemento: ${textController.text}.");
