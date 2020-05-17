@@ -88,7 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       onPressed: () {
                         debugPrint("Aggiunto un elemento: ${textController.text}.");
 
-                        pdfDocument.document.pdfPageList.pages.removeLast();
+                        pdfDocument = pw.Document();
                         pdfDocument.addPage(pw.Page(build: (pw.Context context) => pw.Center(child: pw.Text(textController.text, style: pw.TextStyle(font: arial)))));
 
                         debugPrint("Il documento ha " + pdfDocument.document.pdfPageList.pages.length.toString() + " pagine.");
@@ -110,7 +110,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<Uint8List> pdfDocumentToUint8List(pw.Document pdfDocumentToBeTranslated) async {
     if (pdfDocumentToBeTranslated.document.pdfPageList.pages.isEmpty) {
       debugPrint("Essendo che il documento è vuoto, lo riempio con una pagina di placeholder.");
-      pdfDocumentToBeTranslated.addPage(pw.Page(build: (pw.Context context) => pw.Center(child: pw.Text("Ciao!"))));
+      pdfDocumentToBeTranslated.addPage(pw.Page(build: (pw.Context context) => pw.Center(child: pw.Text("Ciao!", style: pw.TextStyle(font: arial)))));
     }
 
     Uint8List rawPdfFile = pdfDocumentToBeTranslated.save();
