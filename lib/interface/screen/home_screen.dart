@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'dart:typed_data';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:pdf/pdf.dart';
@@ -17,8 +18,15 @@ class _HomeScreenState extends State<HomeScreen> {
   TextEditingController textController;
 
   pw.Document pdfDocument;
-  pw.Page currentPage;
   List<pw.Widget> currentPageLabels;
+
+  /*final image = PdfImage.file(
+  pdf.document,
+  bytes: File('test.webp').readAsBytesSync(),
+);*/
+
+  static final Uint8List fontData = File("assets/Arial-Regular.ttf").readAsBytesSync();
+  static final pw.Font arial = pw.Font.ttf(fontData.buffer.asByteData());
 
   @override
   void initState() {
@@ -80,11 +88,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       onPressed: () {
                         debugPrint("Aggiunto un elemento: ${textController.text}.");
 
-                        // pdfDocument.document.pdfPageList.pages.removeLast();
-
-                        currentPageLabels.add(pw.Text(textController.text));
-                        pdfDocument.addPage(
-                            pw.Page(pageFormat: PdfPageFormat.a4, build: (pw.Context context) => pw.GridView(crossAxisCount: 4, children: currentPageLabels)));
+                        pdfDocument.document.pdfPageList.pages.removeLast();
+                        pdfDocument.addPage(pw.Page(build: (pw.Context context) => pw.Center(child: pw.Text(textController.text, style: pw.TextStyle(font: arial)))));
 
                         debugPrint("Il documento ha " + pdfDocument.document.pdfPageList.pages.length.toString() + " pagine.");
 
