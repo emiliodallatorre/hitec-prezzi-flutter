@@ -24,6 +24,14 @@ class _HomeScreenState extends State<HomeScreen> {
     textController = TextEditingController();
     pdf = pdfwidgets.Document();
 
+    pdf.addPage(pdfwidgets.Page(
+                            pageFormat: PdfPageFormat.a4,
+                            build: (pdfwidgets.Context context) {
+                              return pdfwidgets.Center(
+                                child: pdfwidgets.Text("Hello World"),
+                              ); // Center
+                            }));
+
     super.initState();
   }
 
