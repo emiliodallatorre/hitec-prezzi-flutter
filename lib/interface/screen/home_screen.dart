@@ -1,5 +1,7 @@
 import 'dart:math';
 import 'dart:typed_data';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -115,6 +117,20 @@ class _HomeScreenState extends State<HomeScreen> {
                     }
                   },
                 ),
+                RaisedButton(child: Text("Salva"),
+                onPressed: () async {
+                  pw.Document finale = await renderDocument();
+
+                  var directory = await getApplicationDocumentsDirectory();
+
+
+                  File finaleFile = File(directory.path + "/result.pdf");
+                  finaleFile.writeAsBytes(finale.save());
+                  debugPrint("Salvato su file.");
+                
+
+                  // labels = List<String>();
+                },),
               ],
             ),
           ),
@@ -150,14 +166,14 @@ class _HomeScreenState extends State<HomeScreen> {
             child: pw.Row(
               crossAxisAlignment: pw.CrossAxisAlignment.stretch,
               children: <pw.Widget>[
-                pw.Expanded(flex: 4, child: pw.Image(logo)),
+                pw.Expanded(flex: 6, child: pw.Image(logo, fit: pw.BoxFit.contain)),
                 pw.Expanded(
-                  flex: 10,
+                  flex: 9,
                   child: pw.Row(
                     mainAxisSize: pw.MainAxisSize.max,
                     crossAxisAlignment: pw.CrossAxisAlignment.center,
                     children: <pw.Widget>[
-                      pw.VerticalDivider(color: PdfColors.white),
+                      pw.VerticalDivider(color: PdfColors.white, width: 8.0),
                       pw.Row(
                         mainAxisSize: pw.MainAxisSize.max,
                         mainAxisAlignment: pw.MainAxisAlignment.center,
@@ -172,7 +188,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
-            color: PdfColors.red),
+            ),
       ),
     );
 
@@ -185,10 +201,10 @@ class _HomeScreenState extends State<HomeScreen> {
         List<pw.Widget> widgets = renderedLabels.getRange(44 * index, labels.length).toList();
         for (int i = labels.length; i < (44 * (index + 1)); i++) widgets.add(pw.Container());
 
-        pages.add(pw.Page(build: (pw.Context context) => pw.GridView(childAspectRatio: 2, crossAxisCount: 4, children: widgets)));
+        pages.add(pw.Page(pageTheme: pw.PageTheme(margin: pw.EdgeInsets.all(16.0)),build: (pw.Context context) => pw.GridView(crossAxisSpacing: 4.0,mainAxisSpacing: 4.0,childAspectRatio: 2, crossAxisCount: 4, children: widgets)));
         continue;
       }
-      pages.add(pw.Page(
+      pages.add(pw.Page(pageTheme: pw.PageTheme(margin: pw.EdgeInsets.all(16.0)),
           build: (pw.Context context) =>
               pw.GridView(childAspectRatio: 2, crossAxisCount: 4, children: renderedLabels.getRange(44 * index, 44 * (index + 1)).toList())));
     }
